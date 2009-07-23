@@ -14,11 +14,28 @@ module Pez
 	 [:pez_memstat, [], :void],
    [:pez_load,    [:pointer], :int],
 	 # These don't quite work well with FFI (or with 0.2 at least; maybe fixed):
-	 # [:pez_mark, [:pointer], :void],
-	 # [:pez_unwind, [:pointer], :void],
+   [:pez_mark, [:pointer], :void],
+   [:pez_unwind, [:pointer], :void],
 	].each { |fdef|
 		attach_function *fdef
 	}
+	
+  class StateMark < FFI::Struct
+    layout  :mstack, :pointer,
+            :mheap, :pointer,
+            :mrstack, :pointer,
+            :mdict, :pointer
+  end
+  
+  def mark
+    mk = StateMark.new
+    Pez.pez_mark(mk)
+    mk
+  end
+  
+  def unwind(mark)
+    Pez.pez_unwind(mark)
+  end
 	
 	def load(file)
 	  f = fopen(file, "r")

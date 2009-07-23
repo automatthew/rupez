@@ -5,7 +5,8 @@ require 'pez'
 if __FILE__ == $0
   include Pez
   pez_init
-
+  m = mark
+  unwind(m)
   loop {
     print "-> " if $stdin.tty?
     $stdout.flush
