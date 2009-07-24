@@ -5,7 +5,15 @@ module Pez
 
   ffi_lib 'pez'
   
+  # You can adjust the size of the stack, return stack, heap, and initial 
+  # dictionary allocated by Pez by setting the following variables before
+  # calling pez_init.
   attach_variable :pez__sp, :pointer
+  attach_variable :pez_stklen, :long
+  attach_variable :pez_rstklen, :long
+  attach_variable :pez_heaplen, :long
+  attach_variable :pez_ltempstr, :long
+  attach_variable :pez_ntempstr, :long
   
   def self.stack
     self.pez__sp
