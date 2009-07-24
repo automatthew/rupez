@@ -24,6 +24,16 @@ if __FILE__ == $0
   push 1.5
   fsquare = lookup(:fsquare)
   pez_exec(fsquare)
+    
+  push [ 2.0, 3.0 ]
+  pez_eval "f- f. cr"
+  
+  pez_eval "Hello, World!".dump
+  pez_eval 'puts'
+  
+  push "monkey"
+  pez_eval "puts"
+
   
   unwind(m)
   

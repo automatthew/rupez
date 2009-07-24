@@ -75,17 +75,38 @@ module Pez
   end
   
   def push(val, type=nil)
-    if type
-      Pez.stack.send("put_#{type}", 0, val)
-    else
-      case val
+    increment = case val
+    when String
+      pez_eval val.dump
+    when Array
+      case val.first
       when Integer
-        Pez.stack.put_long(0, val)
-        Pez.stack += FFI::NativeType::LONG.size
+        Pez.stack.write_array_of_long(val)
+        FFI::NativeType::LONG.size * val.size
       when Float
-        Pez.stack.put_float64(0, val)
-        Pez.stack += 8
+        Pez.stack.put_array_of_float64(0, val)
+        8 * val.size
       end
+    when Integer
+      Pez.stack.put_long(0, val)
+      FFI::NativeType::LONG.size
+    when Float
+      Pez.stack.put_float64(0, val)
+      8
+    end
+    Pez.stack += increment
+  end
+  
+  alias_method :<<, :push
+  
+  def push_array(ary)
+    case ary.first
+    when Integer
+      Pez.stack.write_array_of_long(ary)
+      Pez.stack += FFI::NativeType::LONG.size * ary.size
+    when Float
+      Pez.stack.put_array_of_float64(0, ary)
+      Pez.stack += 8 * ary.size
     end
   end
 
