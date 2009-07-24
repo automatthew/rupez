@@ -9,28 +9,43 @@ module Pez
   attach_function :fopen, [ :string, :string ], :pointer
 
   [[:pez_init,    [], :void],
-    [:pez_break,   [], :void],
-    [:pez_eval,    [:string], :int],
-    [:pez_memstat, [], :void],
-    [:pez_load,    [:pointer], :int],
-    # These don't quite work well with FFI (or with 0.2 at least; maybe fixed):
-    [:pez_mark, [:pointer], :void],
-    [:pez_unwind, [:pointer], :void],
+   [:pez_break,   [], :void],
+   [:pez_eval,    [:string], :int],
+   [:pez_memstat, [], :void],
+   [:pez_load,    [:pointer], :int],
+   [:pez_mark, [:pointer], :void],
+   [:pez_unwind, [:pointer], :void],
+   [:pez_lookup, [:string], :pointer]
   ].each { |fdef|
     attach_function *fdef
   }
-
-  class StateMark < FFI::Struct
+  
+  class StateMark < FFI::ManagedStruct
     layout  :mstack, :pointer,
-      :mheap, :pointer,
-      :mrstack, :pointer,
-      :mdict, :pointer
+            :mheap, :pointer,
+            :mrstack, :pointer,
+            :mdict, :pointer
+    def self.release(ptr)
+      ptr.free
+    end
+  end
+  
+  class DictWord < FFI::Struct
+    layout  :wnext, :pointer,
+            :wname, :string,
+            :wcode, :pointer
+  end
+  
+  def lookup(word)
+    dw = FFI::MemoryPointer.new(DictWord)
+    dw = Pez.pez_lookup(word)
+    DictWord.new(dw)
   end
 
   def mark
-    mk = StateMark.new
+    mk = FFI::MemoryPointer.new(StateMark)
     Pez.pez_mark(mk)
-    mk
+    FFI::AutoPointer.new(mk.read_pointer, StateMark.method(:release))
   end
 
   def unwind(mark)
@@ -44,3 +59,4 @@ module Pez
   end
 
 end
+
