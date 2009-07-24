@@ -96,19 +96,6 @@ module Pez
     end
     Pez.stack += increment
   end
-  
-  alias_method :<<, :push
-  
-  def push_array(ary)
-    case ary.first
-    when Integer
-      Pez.stack.write_array_of_long(ary)
-      Pez.stack += FFI::NativeType::LONG.size * ary.size
-    when Float
-      Pez.stack.put_array_of_float64(0, ary)
-      Pez.stack += 8 * ary.size
-    end
-  end
 
 end
 
