@@ -71,6 +71,14 @@ module Pez
     Pez.pez_mark(mk)
     FFI::AutoPointer.new(mk.read_pointer, StateMark.method(:release))
   end
+  
+  def murray
+    # Pete will give 5 bucks to the first person who figures out the name
+    mk = FFI::MemoryPointer.new(StateMark)
+    Pez.pez_mark(mk)
+    yield
+    Pez.pez_unwind(mk)
+  end
 
   def unwind(mark)
     Pez.pez_unwind(mark)
