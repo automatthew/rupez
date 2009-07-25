@@ -15,6 +15,10 @@ module Pez
   attach_variable :pez_ltempstr, :long
   attach_variable :pez_ntempstr, :long
   
+  # If a multi-line comment awaiting termination with a ")" is active,
+  # pez_comment will be nonzero
+  attach_variable :pez_comment, :long
+  
   def self.stack
     self.pez__sp
   end
