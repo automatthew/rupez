@@ -7,35 +7,29 @@ if __FILE__ == $0
   include Pez
   pez_init
   
-  m = mark
+  murray do
   
-  # pez_eval ": foo 5 3 + . cr ;"
-  # 
-  # foo = lookup("foo")
-  # pez_exec(foo)
-  
-  word :square, "dup * . cr"
-  push 15
-  square = lookup(:square)
-  pez_exec(square)
+    word :square, "dup * . cr"
+    push 15
+    square = lookup(:square)
+    pez_exec(square)
   
   
-  word :fsquare, "fdup f* f. cr"
-  push 1.5
-  fsquare = lookup(:fsquare)
-  pez_exec(fsquare)
+    word :fsquare, "fdup f* f. cr"
+    push 1.5
+    fsquare = lookup(:fsquare)
+    pez_exec(fsquare)
     
-  push [ 2.0, 3.0 ]
-  pez_eval "f- f. cr"
+    push [ 2.0, 3.0 ]
+    pez_eval "f- f. cr"
   
-  pez_eval "Hello, World!".dump
-  pez_eval 'puts'
+    pez_eval "Hello, World!".dump
+    pez_eval 'puts'
   
-  push "monkey"
-  pez_eval "puts"
-
+    push "monkey"
+    pez_eval "puts"
   
-  unwind(m)
+  end
   
   # loop {
   #   print "-> " if $stdin.tty?
