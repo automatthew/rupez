@@ -40,7 +40,7 @@ module Pez
     [:pez_unwind, [:pointer], :void],
     [:pez_lookup, [:string], :pointer],
     [:pez_exec, [:pointer], :int],
-    [:pez_push_string, [:string], :void],
+    [:pez_stack_string, [:string], :void],
   ].each { |fdef|
     attach_function *fdef
   }
@@ -99,7 +99,7 @@ module Pez
     # TODO:  Check for stack overflow
     case val
     when String
-      Pez.pez_push_string(val)
+      Pez.pez_stack_string(val)
     when Array
       case val.first
       when Integer
