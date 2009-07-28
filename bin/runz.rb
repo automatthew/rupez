@@ -23,9 +23,6 @@ if __FILE__ == $0
     push [ 2.0, 3.0 ]
     pez_eval "f- f. cr"
   
-    pez_eval "Hello, World!".dump
-    pez_eval 'puts'
-  
     push "monkey"
     pez_eval "puts"
   

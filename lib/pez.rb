@@ -40,6 +40,7 @@ module Pez
     [:pez_unwind, [:pointer], :void],
     [:pez_lookup, [:string], :pointer],
     [:pez_exec, [:pointer], :int],
+    [:pez_push_string, [:string], :void],
   ].each { |fdef|
     attach_function *fdef
   }
@@ -95,26 +96,26 @@ module Pez
   end
   
   def push(val, type=nil)
-    increment = case val
+    # TODO:  Check for stack overflow
+    case val
     when String
-      pez_eval val.dump
+      Pez.pez_push_string(val)
     when Array
       case val.first
       when Integer
         Pez.stack.write_array_of_long(val)
-        FFI::NativeType::LONG.size * val.size
+        Pez.stack += FFI::NativeType::LONG.size * val.size
       when Float
         Pez.stack.put_array_of_float64(0, val)
-        8 * val.size
+        Pez.stack += 8 * val.size
       end
     when Integer
       Pez.stack.put_long(0, val)
-      FFI::NativeType::LONG.size
+      Pez.stack += FFI::NativeType::LONG.size
     when Float
       Pez.stack.put_float64(0, val)
-      8
+      Pez.stack += 8
     end
-    Pez.stack += increment
   end
 
 end
